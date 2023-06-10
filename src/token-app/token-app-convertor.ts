@@ -4,6 +4,7 @@ import { getProfileData } from "./get-profile-data.js"
 import { getTokenDataBySymbol } from "./get-token-data.js"
 import fs from 'fs'
 import dotenv from 'dotenv'
+import { getRandomAmountInvested } from "./randomize-token-data.js"
 dotenv.config()
 
 const MAX_RESULTS = Number(process.env.MAX_RESULTS) ?? 20
@@ -38,7 +39,7 @@ async function exportToTokenApp(symbols: string[]) {
             ? convertAvatarIfIpfs((profile?.picture as MediaSetFragment)?.original?.url)
             : null
         },
-        tokens: [token]
+        tokens: [{ ...token, investedViaPost: getRandomAmountInvested() }]
       }
     }
   }))
