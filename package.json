@@ -12,7 +12,7 @@
     "lint": "npm run -s format:check && npm run lint:ts",
     "lint:ts": "lint-tokenweb3",
     "lint:fix": "npx lint-tokenweb3 --fix",
-    "start": "npm run build && node build/fetchPosts",
+    "start": "npm run build && node build/server",
     "test": "npm run -s lint && npm run -s test:coverage",
     "test:ava": "ava",
     "test:coverage": "c8 ava"
