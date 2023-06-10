@@ -7,7 +7,7 @@ const RESULTS_TO_RETURN = 20
 const app = express()
 
 app.get('/publications', async (req, res) => {
-  const symbols = req.query.symbols as string[]
+  const symbols = (req.query.symbols as string).split(',')
 
   console.log(`/publications called with: ${symbols}`)
 
@@ -22,7 +22,6 @@ app.get('/publications', async (req, res) => {
 
   return res.send(publications.slice(0, RESULTS_TO_RETURN))
 })
-
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`)

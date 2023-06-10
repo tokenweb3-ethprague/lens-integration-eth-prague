@@ -9,6 +9,9 @@ export const getPublicationsBySymbols = async (symbols: string[]): Promise<Publi
    * Read latest posts from Lens BigQuery
    */
   const client = new BigQuery({ keyFilename: KEYFILE_PATH })
+
+  const contentFilterClause = `(${symbols.map(symbol => `LOWER(content) LIKE "%${symbol.toLowerCase()}%"`).join(' OR ')})`
+
   const query = `
     SELECT *
     FROM lens-public-data.polygon.public_profile_post
@@ -19,25 +22,12 @@ export const getPublicationsBySymbols = async (symbols: string[]): Promise<Publi
     AND s3_metadata_location IS NOT NULL
     AND has_error = false
     AND is_metadata_processed = true
-    AND content LIKE '%aave%' OR content LIKE '%btc%' OR content LIKE '%eth%'
+    AND ${contentFilterClause}
     ORDER BY block_timestamp DESC
     LIMIT 1000
   `
+
   const [publications] = await client.query({ query, location: 'US' })
 
-  /**
-   * Filter the publications to those only including one of the symbols
-   */
-  return publications.filter((pub) => {
-    let includesSymbol = false
-
-    for (const symbol of symbols) {
-      if (pub.content.includes(symbol)) {
-        includesSymbol = true
-        break
-      }
-    }
-
-    return includesSymbol
-  })
+  return publications
 }
