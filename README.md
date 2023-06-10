@@ -4,6 +4,8 @@
 
 Our tool can filter Lens posts by keywords. Usecase: by filtering for token tickers (ex. AAVE, UNI) we can allow Token.com users to discover & invest in the tokens that Lens users are talking about.
 
+[View our submission on Devfolio ❤️](https://devfolio.co/projects/tokencom-lens-integration-39fa)
+
 ## Usage
 
 This project is intended to be consumed by other front-end apps and widgets by calling the folowing URL:
