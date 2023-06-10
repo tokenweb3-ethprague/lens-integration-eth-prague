@@ -66,6 +66,7 @@ export const getPublicationsBySymbols = async (symbols: string[]): Promise<LensP
     AND content NOT LIKE '%** New Post notification for communities you follow%'
     AND content NOT LIKE '%https://snapshot.org/#/%'
     AND content NOT LIKE '%@pooltogether.lens%'
+    AND content NOT LIKE '%Aave V3%'
     AND ${contentFilterClause}
     ORDER BY block_timestamp DESC
     LIMIT 200
