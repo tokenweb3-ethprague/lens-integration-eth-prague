@@ -20,6 +20,11 @@ You can also call this via curl:
 curl --get https://ethprague-lens-hackathon.herokuapp.com/publications --data-urlencode "symbols=aave,eth,arb,op,matic"
 ```
 
+Afterwards, use the [Lens SDK](https://docs.lens.xyz/docs/lensclient-sdk) to build your experience, whether it's showing pulblications about:
+- the tokens you hold in your wallet
+- trending tokens
+- tokens in a similar collection, e.g. LSDs
+
 ## Getting Started
 
 **Install the project**
