@@ -13,13 +13,53 @@ type HackathonTokenData = {
   changePercent24h: number,
 }
 
+type LensPostData = {
+  "post_id": string,
+  "contract_publication_id": string,
+  "profile_id": string,
+  "content_uri": string,
+  "s3_metadata_location": string,
+  "collect_nft_address": string,
+  "reference_implementation": string,
+  "reference_return_data": string,
+  "is_related_to_post": boolean,
+  "is_related_to_comment": boolean,
+  "is_metadata_processed": boolean,
+  "has_error": boolean,
+  "metadata_error_reason": string,
+  "tx_hash": string,
+  "is_hidden": boolean,
+  "timeout_request": boolean,
+  "app_id": string,
+  "block_timestamp": {
+    "value": string,
+  },
+  "created_block_hash": string,
+  "metadata_version": string,
+  "language": string,
+  "region": string,
+  "content_warning": string,
+  "main_content_focus": string,
+  "tags_vector": string,
+  "custom_filters_gardener_flagged": boolean,
+  "content": string,
+  "is_gated": boolean,
+  "is_data_availability": boolean,
+  "data_availability_proofs": string,
+  "datastream_metadata": {
+    "uuid": string,
+    "source_timestamp": number,
+  }
+  "data_availability_verification_failed": boolean
+}
+
 const keyFilename = './keyfile.json'
-const postsFilename = './lens-posts.json'
+const postsFilename = './output/lens-posts.json'
 const lensClient = new LensClient({
   environment: production,
 })
 
-const rawTokenData = fs.readFileSync('./token-data.json');
+const rawTokenData = fs.readFileSync('./src/token-data.json');
 let tokens: HackathonTokenData[] = JSON.parse(rawTokenData.toString('utf8'));
 
 const getTokenDataBySymbol = (symbol: string): HackathonTokenData | undefined => {
@@ -28,7 +68,7 @@ const getTokenDataBySymbol = (symbol: string): HackathonTokenData | undefined =>
 
 const convertAvatarIfIpfs = (url: string): string => {
   if (url.startsWith('ipfs://')) {
-    return url.replace('ipfs://','https://ipfs.io/ipfs/')
+    return url.replace('ipfs://', 'https://ipfs.io/ipfs/')
   } else {
     return url
   }
@@ -47,8 +87,9 @@ const getLatestPosts = async () => {
     AND s3_metadata_location IS NOT NULL
     AND has_error = false
     AND is_metadata_processed = true
+    AND content LIKE '%aave%' OR content LIKE '%btc%' OR content LIKE '%eth%'
     ORDER BY block_timestamp DESC
-    LIMIT 1000
+    LIMIT 100
     `
 
   const options = {
@@ -60,14 +101,15 @@ const getLatestPosts = async () => {
 
   let edges = []
 
-  const filters = ['btc', 'aave', 'eth', 'shib', 'pepe']
+  const symbols = ['ARB','AAVE', 'btc', 'aave', 'eth', 'shib', 'pepe', 'BTC', 'ETH',]
 
-  const filteredData = rows.filter((row) => {
+  const filteredData = rows.filter((row: LensPostData) => {
     // return true when post contains one or more of the filter items
     let includesTokenSymbol = false
 
-    for (const symbol of filters) {
-      if (row.content.includes(symbol)) {
+    for (const symbol of symbols) {
+      //if (row.content.includes(symbol)) {
+      if (row.content != null && row.content.includes(symbol)) {
         includesTokenSymbol = true
         break
       }
@@ -79,7 +121,7 @@ const getLatestPosts = async () => {
   for (const row of filteredData) {
     const profile = await getProfileInfo(row.profile_id)
 
-    for (const symbol of filters) {
+    for (const symbol of symbols) {
       if (row.content.includes(symbol)) {
         const token = getTokenDataBySymbol(symbol)
         const edge = {
@@ -113,7 +155,7 @@ const getLatestPosts = async () => {
   const final = {
     "me": {
       "feed": {
-        "edges": edges.slice(0,20),
+        "edges": edges.slice(0, 20),
         "pageInfo": {
           "hasNextPage": false,
           "hasPreviousPage": false,
@@ -123,7 +165,7 @@ const getLatestPosts = async () => {
       }
     }
   }
-  fs.writeFileSync('./finalJson.json', JSON.stringify(final))
+  fs.writeFileSync('./output/finalJson.json', JSON.stringify(final))
 }
 
 const getProfileInfo = async (profileId: string) => {
@@ -133,7 +175,7 @@ const getProfileInfo = async (profileId: string) => {
 }
 
   ; (async () => {
-    console.log('Getting latest posts...')
+    console.log('Getting latest trending tokens posts...')
     await getLatestPosts()
     console.log('Done!')
   })()
