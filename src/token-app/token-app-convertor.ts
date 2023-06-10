@@ -61,7 +61,7 @@ async function exportToTokenApp(symbols: string[]) {
 
 function getMatchingSymbol(symbols: string[], content: string): string {
   for (const symbol of symbols) {
-    if (content.includes(symbol)) {
+    if (content.toLowerCase().includes(symbol.toLowerCase())) {
       return symbol
     }
   }
