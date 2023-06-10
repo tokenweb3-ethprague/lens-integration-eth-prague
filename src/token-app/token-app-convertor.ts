@@ -16,7 +16,6 @@ const SYMBOLS = ['btc', 'eth', 'doge']
 async function exportToTokenApp(symbols: string[]) {
   const publications = await getPublicationsBySymbols(symbols)
 
-  
   const edges = await Promise.all(publications.map(async publication => {
     const profile = await getProfileData(publication.profile_id) as ProfileFragment
     
