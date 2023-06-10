@@ -12,7 +12,7 @@ const MAX_RESULTS = Number(process.env.MAX_RESULTS) ?? 20
 /**
  * Modify the symbols
  */
-const SYMBOLS = ['btc', 'doge', 'arb', 'gtc', 'pepe']
+const SYMBOLS = ['btc', 'doge', 'arb', 'sui', 'pepe', 'ape', 'rndr', 'bnb', 'xlm', 'ada']
 
 async function exportToTokenApp(symbols: string[]) {
   const publications = await getPublicationsBySymbols(symbols)

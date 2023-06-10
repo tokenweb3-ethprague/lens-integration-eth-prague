@@ -14,5 +14,5 @@ export function getRandomAmountInvested(): string {
   if (randBetween(1, 3) > 1) {
     return `$${randBetween(0, 49)}.${randBetween(0,9)}k`
   }
-  return `$${randBetween(482, 999)}`
+  return `${randBetween(482, 999)}`
 }

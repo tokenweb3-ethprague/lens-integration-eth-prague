@@ -40,13 +40,36 @@ export type LensPublication = {
   "data_availability_verification_failed": boolean
 }
 
+const EXCLUSIONS = [
+  'I just voted',
+  'delegate tokens',
+  'Snapshot Proposal Ended',
+  'Voting has started',
+  'New Post notification for communities you follow',
+  'https://snapshot.org/#/',
+  '@pooltogether.lens',
+  'Aave V3',
+  'Lookonchain',
+  'whale alert',
+  'SOL, ADA, MATIC, FIL, SAND, MANA, ALGO, AXS',
+  'Pernyataan resmi',
+  'ema200 bnb  230 sec',
+  'Token Terminal',
+  'UniSat',
+  '_serc',
+  'Stickman',
+  'Vaynerchuk'
+]
+
 export const getPublicationsBySymbols = async (symbols: string[]): Promise<LensPublication[]> => {
   /**
    * Read latest posts from Lens BigQuery
    */
   const client = new BigQuery({ credentials: JSON.parse(process.env.BIGQUERY_CREDENTIALS as string) })
 
-  const contentFilterClause = `(${symbols.map(symbol => `LOWER(content) LIKE "%${symbol.toLowerCase()}%"`).join(' OR ')})`
+  const contentFilterClause = `(${symbols.map(symbol => `LOWER(content) LIKE "% ${symbol.toLowerCase()}% "`).join(' OR ')})`
+
+  const exclusionsFilterClause = `(${EXCLUSIONS.map(item => `LOWER(content) NOT LIKE "%${item.toLowerCase()}%"`).join(' AND ')})`
 
   const query = `
     SELECT *
@@ -59,14 +82,7 @@ export const getPublicationsBySymbols = async (symbols: string[]): Promise<LensP
     AND s3_metadata_location IS NOT NULL
     AND has_error = false
     AND is_metadata_processed = true
-    AND content NOT LIKE '%I just voted%' 
-    AND content NOT LIKE '%delegate tokens%' 
-    AND content NOT LIKE '%Voting has started%' 
-    AND content NOT LIKE '%Snapshot Proposal Ended%'
-    AND content NOT LIKE '%** New Post notification for communities you follow%'
-    AND content NOT LIKE '%https://snapshot.org/#/%'
-    AND content NOT LIKE '%@pooltogether.lens%'
-    AND content NOT LIKE '%Aave V3%'
+    AND ${exclusionsFilterClause}
     AND ${contentFilterClause}
     ORDER BY block_timestamp DESC
     LIMIT 200
