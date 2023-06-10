@@ -1,4 +1,7 @@
 import express from 'express'
+import dotenv from 'dotenv'
+dotenv.config()
+
 import { getPublicationsBySymbols } from './get-pulications-by-token-symbols.js'
 
 const PORT = 3000
