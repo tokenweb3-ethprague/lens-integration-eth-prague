@@ -72,3 +72,9 @@ BIGQUERY_CREDENTIALS=<your_stringified_keyfile>
 npm build
 npm start
 ```
+
+**Call the endpoint**
+
+```console
+curl --get localhost:3000/publications --data-urlencode "symbols=aave,eth,arb,op,matic"
+```
