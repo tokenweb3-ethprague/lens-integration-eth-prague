@@ -5,7 +5,7 @@ dotenv.config()
 import { getPublicationsBySymbols } from './get-pulications-by-token-symbols.js'
 
 const PORT = process.env.PORT || 3000
-const RESULTS_TO_RETURN = 20
+export const MAX_RESULTS = Number(process.env.MAX_RESULTS) ?? 20
 
 const app = express()
 
@@ -21,9 +21,9 @@ app.get('/publications', async (req, res) => {
     console.log(error)
   }
 
-  console.log(`${publications.length} results found for ${symbols}. returning ${RESULTS_TO_RETURN} results`)
+  console.log(`${publications.length} results found for ${symbols}. returning ${MAX_RESULTS} results`)
 
-  return res.send(publications.slice(0, RESULTS_TO_RETURN))
+  return res.send(publications.slice(0, MAX_RESULTS))
 })
 
 app.listen(PORT, () => {

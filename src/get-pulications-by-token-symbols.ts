@@ -49,19 +49,25 @@ export const getPublicationsBySymbols = async (symbols: string[]): Promise<LensP
   const contentFilterClause = `(${symbols.map(symbol => `LOWER(content) LIKE "%${symbol.toLowerCase()}%"`).join(' OR ')})`
 
   const query = `
-    SELECT *
-    FROM lens-public-data.polygon.public_profile_post
-    WHERE main_content_focus = "TEXT_ONLY" 
-    AND content IS NOT NULL 
-    AND content_warning IS NULL
-    AND is_related_to_post IS NULL
-    AND s3_metadata_location IS NOT NULL
-    AND has_error = false
-    AND is_metadata_processed = true
-    AND ${contentFilterClause}
-    ORDER BY block_timestamp DESC
-    LIMIT 1000
-  `
+  SELECT *
+  FROM lens-public-data.polygon.public_profile_post
+  WHERE main_content_focus = "TEXT_ONLY" 
+  AND content IS NOT NULL 
+  AND content_warning IS NULL
+  AND is_related_to_post IS NULL
+  AND is_related_to_comment IS NULL
+  AND s3_metadata_location IS NOT NULL
+  AND has_error = false
+  AND is_metadata_processed = true
+  AND content NOT LIKE '%I just voted%' 
+  AND content NOT LIKE '%delegate tokens%' 
+  AND content NOT LIKE '%Voting has started%' 
+  AND content NOT LIKE '%Snapshot Proposal Ended%'
+  AND content NOT LIKE '%** New Post notification for communities you follow%'
+  AND content NOT LIKE '%https://snapshot.org/#/%'
+  AND ${contentFilterClause}
+  ORDER BY block_timestamp DESC
+  LIMIT 200`
 
   const [publications] = await client.query({ query, location: 'US' })
 
