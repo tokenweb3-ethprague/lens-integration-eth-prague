@@ -19,6 +19,7 @@ export const getPublicationsBySymbols = async (symbols: string[]): Promise<Publi
     AND s3_metadata_location IS NOT NULL
     AND has_error = false
     AND is_metadata_processed = true
+    AND content LIKE '%aave%' OR content LIKE '%btc%' OR content LIKE '%eth%'
     ORDER BY block_timestamp DESC
     LIMIT 1000
   `
