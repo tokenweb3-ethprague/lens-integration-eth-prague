@@ -1,6 +1,6 @@
 # Social investing using Lens x Token.com
 
-![banner](./static/banner.png)
+![banner](./static/banner-slim.png)
 
 Our tool can filter Lens posts by keywords. Usecase: by filtering for token tickers (ex. AAVE, UNI) we can allow Token.com users to discover & invest in the tokens that Lens users are talking about.
 
