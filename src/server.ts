@@ -4,7 +4,7 @@ dotenv.config()
 
 import { getPublicationsBySymbols } from './get-pulications-by-token-symbols.js'
 
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 const RESULTS_TO_RETURN = 20
 
 const app = express()
