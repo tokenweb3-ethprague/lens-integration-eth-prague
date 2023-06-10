@@ -2,7 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
 
-import { getPublicationsBySymbols } from './get-pulications-by-token-symbols.js'
+import { getPublicationsBySymbols } from './get-publications-by-token-symbols.js'
 
 const PORT = process.env.PORT || 3000
 export const MAX_RESULTS = Number(process.env.MAX_RESULTS) ?? 20

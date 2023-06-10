@@ -1,5 +1,5 @@
 import { MediaSetFragment, ProfileFragment } from "@lens-protocol/client"
-import { getPublicationsBySymbols } from "../get-pulications-by-token-symbols.js"
+import { getPublicationsBySymbols } from "../get-publications-by-token-symbols.js"
 import { getProfileData } from "./get-profile-data.js"
 import { getTokenDataBySymbol } from "./get-token-data.js"
 import fs from 'fs'
